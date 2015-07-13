@@ -4,6 +4,7 @@ import time
 from LaTeX2IMG import LaTeX2IMG
 from time import sleep
 from threading import current_thread
+from sympy import *
 
 TOKEN = ''
 
@@ -37,6 +38,7 @@ def listener(messages):
 
 with open("token.txt","r") as file:
     TOKEN = file.readline().strip()
+init_session()  # Init sympy session
 tb = telebot.TeleBot(TOKEN)
 tb.set_update_listener(listener) #register listener
 tb.polling()
