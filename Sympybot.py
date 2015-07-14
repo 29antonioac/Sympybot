@@ -20,10 +20,13 @@ def listener(messages):
             text = m.text
             if text.startswith("/symbolic "):
                 text = text.split("/symbolic ")[-1]
-                numeric = False
+                command = "symbolic"
             elif text.startswith("/numeric "):
                 text = text.split("/numeric ")[-1]
-                numeric = True
+                command = "numeric"
+            elif text.startswith("/plot "):
+                text = text.split("/plot ")[-1]
+                command = "plot"
             else:
                 break
 
@@ -32,20 +35,32 @@ def listener(messages):
             filename = 'resultado' + current_thread().name
 
             ###########
-            # Calculus
-            try:
-                if numeric:
-                    output = latex(sympify(text).evalf())
+            # Calculus or plot
+            if command == "plot":
+                try:
+                    p = plot(text,show=False,title=text,ylabel="")
+                except SyntaxError:
+                    tb.reply_to(m,"Sintaxis inválida")
+                except:
+                    tb.reply_to(m,"Error desconocido " + sys.exc_info())
                 else:
-                    output = latex(sympify(text))
-            except ValueError:
-                tb.reply_to(m,"No has escrito bien la expresión")
-            except:
-                tb.reply_to(m,"Error desconocido" + sys.exc_info())
+                    p.save(filename + '.png')
+                    image = open(filename + '.png','rb')
+                    tb.send_photo(chatid,image)
             else:
-                LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
-                result = open(filename + '.webp','rb')
-                tb.send_sticker(chatid, result)
+                try:
+                    if command == "numeric":
+                        output = latex(sympify(text).evalf())
+                    else:
+                        output = latex(sympify(text))
+                except ValueError:
+                    tb.reply_to(m,"No has escrito bien la expresión")
+                except:
+                    tb.reply_to(m,"Error desconocido " + sys.exc_info())
+                else:
+                    LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
+                    result = open(filename + '.webp','rb')
+                    tb.send_sticker(chatid, result)
 
 with open("token.txt","r") as file:
     TOKEN = file.readline().strip()
