@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import telebot
 import time
 from LaTeX2IMG import LaTeX2IMG
@@ -31,19 +32,20 @@ def listener(messages):
             filename = 'resultado' + current_thread().name
 
             ###########
-            # Add calculus
-            input = latex(text)
-            if numeric:
-                output = latex(sympify(text).evalf())
+            # Calculus
+            try:
+                if numeric:
+                    output = latex(sympify(text).evalf())
+                else:
+                    output = latex(sympify(text))
+            except ValueError:
+                tb.reply_to(m,"No has escrito bien la expresión")
+            except:
+                tb.reply_to(m,"Error desconocido" + sys.exc_info())
             else:
-                output = latex(sympify(text))
-
-
-            ###########
-            LaTeX2IMG.main(['LaTeX2IMG', output,filename,'webp'])
-            #LaTeX2IMG.main(['LaTeX2IMG',input + "=" + output,filename,'webp'])
-            result = open(filename + '.webp','rb')
-            tb.send_sticker(chatid, result)
+                LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
+                result = open(filename + '.webp','rb')
+                tb.send_sticker(chatid, result)
 
 with open("token.txt","r") as file:
     TOKEN = file.readline().strip()
