@@ -1,4 +1,5 @@
 ^(?!Ejemplos\.png$).*\.png
 *.webp
+*.png
 token.txt
 nohup.out
