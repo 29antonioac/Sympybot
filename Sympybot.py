@@ -17,10 +17,12 @@ def listener(messages):
         chatid = m.chat.id
         if m.content_type == 'text':
             text = m.text
-            if text[0:7] == "/ ":
-                pass
-            elif text[0] == "@":
-                pass
+            if text.startswith("/symbolic "):
+                text = text.split("/symbolic ")[-1]
+                numeric = False
+            elif text.startswith("/numeric "):
+                text = text.split("/numeric ")[-1]
+                numeric = True
             else:
                 break
 
@@ -30,15 +32,26 @@ def listener(messages):
 
             ###########
             # Add calculus
-            ###########
+            input = latex(text)
+            if numeric:
+                output = latex(sympify(text).evalf())
+            else:
+                output = latex(sympify(text))
 
-            LaTeX2IMG.main(['LaTeX2IMG',text,filename,'webp'])
+
+            ###########
+            LaTeX2IMG.main(['LaTeX2IMG', output,filename,'webp'])
+            #LaTeX2IMG.main(['LaTeX2IMG',input + "=" + output,filename,'webp'])
             result = open(filename + '.webp','rb')
             tb.send_sticker(chatid, result)
 
 with open("token.txt","r") as file:
     TOKEN = file.readline().strip()
-init_session()  # Init sympy session
+# Init sympy session
+x, y, z, t = symbols('x y z t')
+k, m, n = symbols('k m n', integer=True)
+f, g, h = symbols('f g h', cls=Function)
+##########
 tb = telebot.TeleBot(TOKEN)
 tb.set_update_listener(listener) #register listener
 tb.polling()
