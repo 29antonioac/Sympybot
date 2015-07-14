@@ -38,11 +38,12 @@ def listener(messages):
             # Calculus or plot
             if command == "plot":
                 try:
-                    p = plot(text,show=False,title=text,ylabel="")
+                    functions = text.split(" ")
+                    p = plot(*functions,show=False,title=text,ylabel="")
                 except SyntaxError:
                     tb.reply_to(m,"Sintaxis inválida")
                 except:
-                    tb.reply_to(m,"Error desconocido " + sys.exc_info())
+                    tb.reply_to(m,"Error desconocido " + str(sys.exc_info()))
                 else:
                     p.save(filename + '.png')
                     image = open(filename + '.png','rb')
@@ -56,7 +57,7 @@ def listener(messages):
                 except ValueError:
                     tb.reply_to(m,"No has escrito bien la expresión")
                 except:
-                    tb.reply_to(m,"Error desconocido " + sys.exc_info())
+                    tb.reply_to(m,"Error desconocido " + str(sys.exc_info()))
                 else:
                     LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
                     result = open(filename + '.webp','rb')
