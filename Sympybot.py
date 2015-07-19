@@ -46,8 +46,8 @@ def listener(messages):
                     tb.reply_to(m,"Error desconocido " + str(sys.exc_info()))
                 else:
                     p.save(filename + '.png')
-                    image = open(filename + '.png','rb')
-                    tb.send_photo(chatid,image)
+                    with open(filename + '.png','rb') as image:
+                        tb.send_photo(chatid,image)
             else:
                 try:
                     if command == "numeric":
@@ -60,8 +60,9 @@ def listener(messages):
                     tb.reply_to(m,"Error desconocido " + str(sys.exc_info()))
                 else:
                     LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
-                    result = open(filename + '.webp','rb')
-                    tb.send_sticker(chatid, result)
+
+                    with open(filename + '.webp','rb') as result:
+                        tb.send_sticker(chatid, result)
 
 with open("token.txt","r") as file:
     TOKEN = file.readline().strip()
