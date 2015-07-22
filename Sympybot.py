@@ -6,6 +6,7 @@ from LaTeX2IMG import LaTeX2IMG
 from time import sleep
 from threading import current_thread
 from sympy import *
+from telebot import logging
 
 TOKEN = ''
 
@@ -66,6 +67,15 @@ def listener(messages):
 
 with open("token.txt","r") as file:
     TOKEN = file.readline().strip()
+
+logger = telebot.logger
+formatter = logging.Formatter('[%(asctime)s] %(thread)d {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
+                                  '%m-%d %H:%M:%S')
+ch = logging.FileHandler("log.txt")
+logger.addHandler(ch)
+logger.setLevel(logging.INFO)  # or use logging.INFO
+ch.setFormatter(formatter)
+
 # Init sympy session
 x, y, z, t = symbols('x y z t')
 k, m, n = symbols('k m n', integer=True)
