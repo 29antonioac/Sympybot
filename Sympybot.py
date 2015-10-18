@@ -61,9 +61,9 @@ def listener(messages):
                 except:
                     tb.reply_to(m,"Error desconocido " + str(sys.exc_info()))
                 else:
-                    LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
+                    LaTeX2IMG.main(['LaTeX2IMG',output,filename,'png'])
 
-                    with open(filename + '.webp','rb') as result:
+                    with open(filename + '.png','rb') as result:
                         tb.send_sticker(chatid, result)
 
 
