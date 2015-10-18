@@ -20,7 +20,23 @@ def listener(messages):
         chatid = m.chat.id
         if m.content_type == 'text':
             text = m.text
-            if text.startswith("/symbolic "):
+            if text.startswith("/start "):
+                tb.reply_to(m,"¡Bienvenido a Sympybot!\n \
+                Tienes varios comandos disponibles:\n \
+                /numeric [expresion]\n \
+                /symbolic [expresion]\n \
+                /plot [expresion]\n \
+                /help o /ayuda\
+                ")
+                break
+            elif text.startswith("/help") or text.startswith("/ayuda"):
+                tb.reply_to(m,"Aquí tienes los comandos disponibles:\n \
+                /numeric [expresion] -> evalúa la expresión\n \
+                /symbolic [expresion] -> igual que numeric pero sin evaluar a flotante\n \
+                /plot [expresion] -> devolverá una representación gráfica de una expresión\
+                ")
+                break
+            elif text.startswith("/symbolic "):
                 text = text.split("/symbolic ")[-1]
                 command = "symbolic"
             elif text.startswith("/numeric "):
