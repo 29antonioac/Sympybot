@@ -7,8 +7,9 @@ from time import sleep
 from threading import current_thread
 from sympy import *
 from telebot import logging
+import os
 
-TOKEN = ''
+TOKEN = os.environ['TelegramToken']
 
 
 def listener(messages):
@@ -19,7 +20,23 @@ def listener(messages):
         chatid = m.chat.id
         if m.content_type == 'text':
             text = m.text
-            if text.startswith("/symbolic "):
+            if text.startswith("/start "):
+                tb.reply_to(m,"¡Bienvenido a Sympybot!\n \
+                Tienes varios comandos disponibles:\n \
+                /numeric [expresion]\n \
+                /symbolic [expresion]\n \
+                /plot [expresion]\n \
+                /help o /ayuda\
+                ")
+                break
+            elif text.startswith("/help") or text.startswith("/ayuda"):
+                tb.reply_to(m,"Aquí tienes los comandos disponibles:\n \
+                /numeric [expresion] -> evalúa la expresión\n \
+                /symbolic [expresion] -> igual que numeric pero sin evaluar a flotante\n \
+                /plot [expresion] -> devolverá una representación gráfica de una expresión\
+                ")
+                break
+            elif text.startswith("/symbolic "):
                 text = text.split("/symbolic ")[-1]
                 command = "symbolic"
             elif text.startswith("/numeric "):
@@ -60,13 +77,11 @@ def listener(messages):
                 except:
                     tb.reply_to(m,"Error desconocido " + str(sys.exc_info()))
                 else:
-                    LaTeX2IMG.main(['LaTeX2IMG',output,filename,'webp'])
+                    LaTeX2IMG.main(['LaTeX2IMG',output,filename,'png'])
 
-                    with open(filename + '.webp','rb') as result:
+                    with open(filename + '.png','rb') as result:
                         tb.send_sticker(chatid, result)
 
-with open("token.txt","r") as file:
-    TOKEN = file.readline().strip()
 
 logger = telebot.logger
 formatter = logging.Formatter('[%(asctime)s] %(thread)d {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
