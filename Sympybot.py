@@ -7,8 +7,9 @@ from time import sleep
 from threading import current_thread
 from sympy import *
 from telebot import logging
+import os
 
-TOKEN = ''
+TOKEN = os.environ['TelegramToken']
 
 
 def listener(messages):
@@ -65,8 +66,6 @@ def listener(messages):
                     with open(filename + '.webp','rb') as result:
                         tb.send_sticker(chatid, result)
 
-with open("token.txt","r") as file:
-    TOKEN = file.readline().strip()
 
 logger = telebot.logger
 formatter = logging.Formatter('[%(asctime)s] %(thread)d {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
