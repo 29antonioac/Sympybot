@@ -24,6 +24,7 @@ You can use these commands:
 * Clone this repository (and submodules)
 * [Get a Telegram Bot Token](https://core.telegram.org/bots)
 * Export an environment variable called "TelegramToken" with your Token
+* Install [webp](https://developers.google.com/speed/webp/download) and [Pillow](http://pillow.readthedocs.org/en/3.0.x/installation.html)
 * Run Sympybot.py
 
 
